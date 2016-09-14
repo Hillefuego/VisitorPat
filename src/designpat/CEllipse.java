@@ -1,12 +1,15 @@
 package designpat;
 
+import visitorPat.ShapeVisitor;
+import visitorPat.Visitable;
+
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
 /**
  * Created by HCH on 20-Aug-16.
  */
-public class CEllipse implements BaseShape {
+public class CEllipse implements BaseShape, Visitable {
     private boolean isSelected = false;
     private Shape shape;
 
@@ -19,7 +22,8 @@ public class CEllipse implements BaseShape {
     }
 
     public void resize(Point currentPoint){
-        ((Ellipse2D) shape).setFrame(((Ellipse2D) shape).getX(), ((Ellipse2D) shape).getY(), currentPoint.x - ((Ellipse2D) shape).getX(), currentPoint.y - ((Ellipse2D) shape).getY());
+        if(isSelected)
+            ((Ellipse2D) shape).setFrame(((Ellipse2D) shape).getX(), ((Ellipse2D) shape).getY(), currentPoint.x - ((Ellipse2D) shape).getX(), currentPoint.y - ((Ellipse2D) shape).getY());
     }
 
     public void drag(Point currentPoint){
@@ -57,5 +61,9 @@ public class CEllipse implements BaseShape {
         builder.append(" "+(int)((Ellipse2D) shape).getWidth());
         builder.append(" "+(int)((Ellipse2D) shape).getHeight()+"\n");
         return builder.toString();
+    }
+
+    public void accept(ShapeVisitor visitor){
+        visitor.visit(this);
     }
 }

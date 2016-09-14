@@ -1,5 +1,4 @@
-group 2
-  group 1
-    ellipse 68 17 35 18
-  group 1
-    rectangle 186 75 109 44
+group 1
+  group 2
+    ellipse 85 48 70 56
+    ellipse 92 145 93 69

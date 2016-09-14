@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import FileIO.*;
+import visitorPat.FileWriteVisitor;
+import visitorPat.ShapeVisitor;
 
 
 /**
@@ -97,7 +99,7 @@ class DrawPad extends JComponent {
                     cmdMan.newCommand(new MakeGroup(shapeMan));
                 }
                 /** Move code to shapemanager **/
-                if(toolboxControls.selectGroup == true && shapeMan.getSelectedGroup() != null){
+/*                if(toolboxControls.selectGroup == true && shapeMan.getSelectedGroup() != null){
                     if(shapeMan.getParentGroup() == null && shapeMan.getChildGroup() == null){
                         shapeMan.setParentGroup(shapeMan.getSelectedGroup());
                     }else if(shapeMan.getParentGroup() != null && shapeMan.getChildGroup() == null){
@@ -107,7 +109,7 @@ class DrawPad extends JComponent {
                         shapeMan.setParentGroup(null);
                         shapeMan.setChildGroup(null);
                     }
-                }
+                }*/
             }
         };
 
@@ -168,14 +170,14 @@ class DrawPad extends JComponent {
     }
 
     public void save()throws IOException{
-        fileWriter.write(shapeMan.printAll());
+        ShapeVisitor FileWriteVisitor = new FileWriteVisitor(shapeMan.printAll());
+        FileWriteVisitor.visit(fileWriter);
         System.out.print(shapeMan.printAll());
     }
 
     public void load()throws IOException{
         shapeMan.clear();
         shapeMan.setShapes(fileReader.readFile());
-        //shapeMan.addShape(fileReader.readFile());
         System.out.print(shapeMan.printAll());
         repaint();
     }

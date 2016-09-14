@@ -2,6 +2,8 @@ package compositePat;
 
 import designpat.BaseShape;
 import designpat.ExtShape;
+import visitorPat.ShapeVisitor;
+import visitorPat.Visitable;
 
 import java.awt.*;
 import java.net.CookieManager;
@@ -11,7 +13,7 @@ import java.util.List;
 /**
  * Created by HCH on 01-Jun-16.
  */
-public class CompositeGroup implements BaseShape {
+public class CompositeGroup implements Group, Visitable {
     private List<BaseShape> shapes = new ArrayList<>();
     private boolean isSelected = false;
 
@@ -117,5 +119,9 @@ public class CompositeGroup implements BaseShape {
                 baseShape.draw(g2d);
             });
         }
+    }
+
+    public void accept(ShapeVisitor visitor){
+        visitor.visit(this);
     }
 }

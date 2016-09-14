@@ -1,12 +1,15 @@
 package designpat;
 
+import visitorPat.ShapeVisitor;
+import visitorPat.Visitable;
+
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 /**
  * Created by HCH on 20-Aug-16.
  */
-public class CRectangle implements BaseShape {
+public class CRectangle implements BaseShape, Visitable {
     private boolean isSelected = false;
     private Shape shape;
 
@@ -19,7 +22,9 @@ public class CRectangle implements BaseShape {
     }
 
     public void resize(Point currentPoint){
+        if(isSelected) {
             ((Rectangle) shape).setSize(currentPoint.x - ((Rectangle) shape).x, currentPoint.y - ((Rectangle) shape).y);
+        }
     }
 
     public void drag(Point currentPoint){
@@ -57,5 +62,9 @@ public class CRectangle implements BaseShape {
         builder.append(" "+(int)((Rectangle) shape).getWidth());
         builder.append(" "+(int)((Rectangle) shape).getHeight()+"\n");
         return builder.toString();
+    }
+
+    public void accept(ShapeVisitor visitor){
+        visitor.visit(this);
     }
 }

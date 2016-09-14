@@ -1,6 +1,9 @@
 package designpat;
 
 import compositePat.CompositeGroup;
+import visitorPat.MoveVisitor;
+import visitorPat.ResizeVisitor;
+import visitorPat.ShapeVisitor;
 
 import javax.swing.plaf.basic.BasicHTML;
 import java.awt.*;
@@ -163,9 +166,10 @@ public class ShapeManager {
     }
 
     public void dragShapes(Point currentPoint){
-        for (BaseShape baseShape : shapes.getShapes()) {
-            baseShape.drag(currentPoint);
-        }
+        ShapeVisitor moveVisitor = new MoveVisitor(currentPoint);
+        shapes.getShapes().stream().forEach(baseShape->
+                moveVisitor.visit(baseShape)
+        );
     }
 
 /*    public boolean resizeSquaresCheck(Shape shape, int oldX, int oldY) {
@@ -190,7 +194,8 @@ public class ShapeManager {
     }*/
 
     public void resizeShape(Point currentPoint, Point lastPoint){
-        shapes.getShapes().stream().forEach((baseShape -> baseShape.resize(currentPoint)));
+        ShapeVisitor resizeVisitor = new ResizeVisitor(currentPoint);
+        shapes.getShapes().stream().forEach((baseShape -> resizeVisitor.visit(baseShape)));
     }
     public String printAll(){
         StringBuilder builder = new StringBuilder();

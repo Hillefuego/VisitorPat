@@ -26,7 +26,7 @@ public class FileReader {
 
     public CompositeGroup readFile() throws IOException {
         List<String> readList = new ArrayList<>();
-        CompositeGroup fileGroup = new CompositeGroup();;
+        CompositeGroup fileGroup;
 
         try (Stream<String> stream = Files.lines(Paths.get("shapesFile"))) {
 
@@ -38,21 +38,27 @@ public class FileReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        fileGroup = parseToGroup(readList, new CompositeGroup());
+        fileGroup = parseToGroup(readList, new CompositeGroup(),2);
         return fileGroup;
     }
 
 
-
-    public CompositeGroup parseToGroup(List<String> readList, CompositeGroup group){
+    /**
+     * ParseToGroup recursively parses a String list into the BaseShape file structure.
+     * While it reads the list until its empty it determines if the current line is still in
+     * the same group by counting the whitespace. If it is, it type-tests the BaseShape in the current line
+     * and adds them accordingly until done. If it isn't, the current group is done and can be returned.
+     * Ellipses and rectangles are added normally but groups are called with another parseToGroup.
+     **/
+    public CompositeGroup parseToGroup(List<String> readList, CompositeGroup group,int depth){
 
         while(!readList.isEmpty()){
             String currentLine = readList.get(0);
             //System.out.print(Arrays.asList(currentLine.trim().split(" ")));
-           // if(whiteSpaceCounter(currentLine)==depth){
+            if(whiteSpaceCounter(currentLine)==depth){
                 if(currentLine.contains("group")) {
                     readList.remove(currentLine);
-                    group.add(parseToGroup(readList, new CompositeGroup()));
+                    group.add(parseToGroup(readList, new CompositeGroup(),depth+2));
                 }
                 if(currentLine.contains("rectangle")) {
                     List<String> shapeCoords = Arrays.asList(currentLine.trim().split(" "));
@@ -73,8 +79,10 @@ public class FileReader {
                     group.add(new CEllipse(ellipse));
                     readList.remove(currentLine);
                 }
+            }else{
+                return group;
             }
-       // }
+        }
 
         return group;
     }
